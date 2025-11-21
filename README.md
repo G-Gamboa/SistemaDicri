@@ -105,7 +105,6 @@ Administrador: admin@dicri.local / 123456
 /docs  
     DiagramaArquitectura.png  
     DiagramaER.png
-
     ManualTécnico.PDF 
 
 docker-compose.yml  
