@@ -6,7 +6,6 @@ const router = Router();
 
 router.use(authenticate);
 
-// Todos los roles pueden ver el historial del expediente
 router.get(
   "/:expedienteId",
   authorizeRoles("Tecnico", "Coordinador", "Administrador"),

@@ -47,7 +47,6 @@ const ExpedienteDetalle = () => {
     }
   };
 
-
   useEffect(() => {
     loadData();
   }, [id]);
@@ -131,7 +130,6 @@ const ExpedienteDetalle = () => {
 
   return (
     <div className="page-container">
-      {}
       <div className="card">
         <div className="section-header">
           <h2>Detalle de expediente {expediente.codigo}</h2>
@@ -145,22 +143,10 @@ const ExpedienteDetalle = () => {
         </p>
 
         {expediente.estado === "Rechazado" && ultimoRechazo && ultimoRechazo.justificacion && (
-          <div
-            style={{
-              marginTop: "12px",
-              padding: "10px 12px",
-              borderRadius: "8px",
-              backgroundColor: "#0A1A45",
-              border: "1px solid #D4A638"
-            }}
-          >
-            <p style={{ margin: 0, color: "#D4A638", fontWeight: 600 }}>
-              Motivo de rechazo:
-            </p>
-            <p style={{ margin: 0, fontSize: "14px" }}>
-              {ultimoRechazo.justificacion}
-            </p>
-            <p style={{ margin: 0, marginTop: "4px", fontSize: "12px", opacity: 0.8 }}>
+          <div className="rechazo-box">
+            <p className="rechazo-box-title">Motivo de rechazo:</p>
+            <p className="rechazo-box-body">{ultimoRechazo.justificacion}</p>
+            <p className="rechazo-box-meta">
               Por: {ultimoRechazo.usuario} ·{" "}
               {new Date(ultimoRechazo.fecha).toLocaleString()}
             </p>
@@ -168,8 +154,6 @@ const ExpedienteDetalle = () => {
         )}
       </div>
 
-
-      {}
       <div className="card">
         <div className="section-header">
           <h3>Indicios registrados</h3>
@@ -209,7 +193,7 @@ const ExpedienteDetalle = () => {
         </div>
 
         {user && (user.rol === "Tecnico" || user.rol === "Administrador") && (
-          <div style={{ marginTop: "20px" }}>
+          <div className="add-indicio">
             <h3>Agregar indicio</h3>
             <form onSubmit={handleAgregarIndicio}>
               <div className="form-field">
@@ -261,7 +245,6 @@ const ExpedienteDetalle = () => {
         )}
       </div>
 
-      {}
       {user && (user.rol === "Coordinador" || user.rol === "Administrador") && (
         <div className="card">
           <h3>Revisión de expediente</h3>
@@ -269,11 +252,10 @@ const ExpedienteDetalle = () => {
             Como coordinador puede aprobar el expediente o rechazarlo indicando
             una justificación para que el técnico realice los ajustes.
           </p>
-          <div style={{ marginBottom: "10px" }}>
+          <div className="revision-actions">
             <button
               onClick={handleAprobar}
-              className="btn btn-primary"
-              style={{ marginRight: "10px" }}
+              className="btn btn-primary btn-approve"
             >
               Aprobar expediente
             </button>
@@ -312,11 +294,7 @@ const ExpedienteDetalle = () => {
         </div>
       )}
 
-      {mensaje && (
-        <div className="page-container">
-          <p>{mensaje}</p>
-        </div>
-      )}
+      {mensaje && <div className="alert">{mensaje}</div>}
     </div>
   );
 };

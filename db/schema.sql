@@ -67,8 +67,3 @@ INSERT INTO Roles (nombre) VALUES ('Tecnico'), ('Coordinador'), ('Administrador'
 
 INSERT INTO EstadosExpediente (nombre)
 VALUES ('Registrado'), ('En revisión'), ('Rechazado'), ('Aprobado');
-
-INSERT INTO Usuarios (nombre, email, password_hash, rol_id, activo)
-VALUES ('Tecnico Demo', 'tecnico@dicri.local', '123456', 1, 1),
-       ('Coordinador Demo', 'coordinador@dicri.local', '123456', 2, 1),
-       ('Admin Demo', 'admin@dicri.local', '123456', 3, 1);

@@ -10,19 +10,8 @@ const ExpedientesList = () => {
     fechaFin: ""
   });
 
-  const loadData = async () => {
-    const params = {};
-    if (filtros.estado) params.estado = filtros.estado;
-    if (filtros.fechaInicio) params.fechaInicio = filtros.fechaInicio;
-    if (filtros.fechaFin) params.fechaFin = filtros.fechaFin;
-
-    const res = await axios.get("/expedientes", { params });
-    setItems(res.data);
-  };
-
   useEffect(() => {
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    axios.get("/expedientes").then((res) => setItems(res.data)).catch(() => {});
   }, []);
 
   const handleChange = (e) => {
@@ -32,7 +21,12 @@ const ExpedientesList = () => {
 
   const handleBuscar = async (e) => {
     e.preventDefault();
-    await loadData();
+    const params = {};
+    if (filtros.estado) params.estado = filtros.estado;
+    if (filtros.fechaInicio) params.fechaInicio = filtros.fechaInicio;
+    if (filtros.fechaFin) params.fechaFin = filtros.fechaFin;
+    const res = await axios.get("/expedientes", { params });
+    setItems(res.data);
   };
 
   return (
@@ -50,11 +44,8 @@ const ExpedientesList = () => {
           </Link>
         </div>
 
-        <form
-          onSubmit={handleBuscar}
-          style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
-        >
-          <div className="form-field" style={{ minWidth: "180px", flex: "1" }}>
+        <form onSubmit={handleBuscar} className="filter-form">
+          <div className="form-field filter-field-wide">
             <label>Estado</label>
             <select
               name="estado"
@@ -68,7 +59,7 @@ const ExpedientesList = () => {
               <option value="Aprobado">Aprobado</option>
             </select>
           </div>
-          <div className="form-field" style={{ minWidth: "160px" }}>
+          <div className="form-field filter-field">
             <label>Fecha inicio</label>
             <input
               type="date"
@@ -77,7 +68,7 @@ const ExpedientesList = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="form-field" style={{ minWidth: "160px" }}>
+          <div className="form-field filter-field">
             <label>Fecha fin</label>
             <input
               type="date"
@@ -86,13 +77,7 @@ const ExpedientesList = () => {
               onChange={handleChange}
             />
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              paddingBottom: "4px"
-            }}
-          >
+          <div className="filter-btn-wrapper">
             <button type="submit" className="btn btn-secondary">
               Aplicar filtros
             </button>
@@ -103,9 +88,7 @@ const ExpedientesList = () => {
       <div className="card">
         <div className="section-header">
           <h3>Listado de expedientes</h3>
-          <span style={{ fontSize: "13px", opacity: 0.8 }}>
-            Total: {items.length}
-          </span>
+          <span className="count-label">Total: {items.length}</span>
         </div>
         <div className="table-wrapper">
           <table>

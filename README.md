@@ -1,125 +1,151 @@
 # Sistema DICRI Evidencias
-Plataforma para la gestión de expedientes e indicios criminalísticos, desarrollada como parte de una prueba técnica. Incluye autenticación por roles, manejo de evidencias, historial de estados, aprobación y rechazo, y despliegue completo en Docker.
 
-## Tecnologías Utilizadas
+Plataforma web para la gestión de expedientes e indicios criminalísticos desarrollada para la Dirección de Investigación Criminalística del Ministerio Público de Guatemala. Implementa autenticación con JWT, control de acceso por roles, historial de estados y despliegue completo en Docker.
 
-### Frontend
-- React + Vite
-- React Router
-- Context API
-- Fetch API
-- Estilos personalizados institucionales
+---
 
-### Backend
-- Node.js
-- Express.js
-- JWT
-- MSSQL
-- Bcrypt
+## Tecnologías
 
-### Base de Datos
-- SQL Server 2022
-- Stored Procedures para toda la lógica crítica
-- Modelo relacional normalizado
+| Capa | Tecnología |
+|---|---|
+| Frontend | React 18, Vite, React Router, Axios |
+| Backend | Node.js 20, Express, JWT, bcrypt |
+| Base de datos | SQL Server 2022, Stored Procedures |
+| Infraestructura | Docker, Docker Compose, Nginx |
 
-### Infraestructura
-- Docker
-- Docker Compose
+---
 
-## Arquitectura General
+## Arquitectura
 
-El sistema se compone de tres servicios principales orquestados con Docker Compose:
+Tres servicios orquestados con Docker Compose:
 
-dicri-web: React (Frontend)
-dicri-api: Node.js y Express (Backend)
-dicri-db: SQL Server 2022 (Base de datos)
+```
+dicri-web   → React (Nginx)       → puerto 5173
+dicri-api   → Node.js / Express   → puerto 3000
+dicri-db    → SQL Server 2022     → puerto 1433
+```
 
-## Modelo Entidad Relación (ER)
+El diagrama de arquitectura y el modelo entidad-relación se encuentran en `/docs`.
 
-Entidades principales:
-- Usuarios
-- Roles
-- Expedientes
-- Indicios
-- EstadosExpediente
-- HistorialEstados
+---
 
-## Requisitos Previos
+## Requisitos previos
 
-- Docker Desktop
-- SQL Server Management Studio (SSMS)
-- Node.js (solo para desarrollo local)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- SQL Server Management Studio (SSMS) para la inicialización de la base de datos
 
-## Instrucciones de Despliegue con Docker
+---
 
-1. Clonar el proyecto o descargar el archivo ZIP.
-2. Abrir la terminal en la carpeta raíz del proyecto.
-3. Ejecutar:
-   docker-compose up --build
-4. Abrir SQL Server Management Studio.
-5. Conectarse al servidor:
-   localhost,1433
-   Usuario: sa
-   Contraseña: P@assw0rd123
-6. Ejecutar los archivos:
-   /db/schema.sql
-   /db/procedures.sql
-7. Acceder al sistema mediante:
-   http://localhost:5173
+## Configuración de variables de entorno
 
-## Acceso al Sistema
+Cree un archivo `.env` en la raíz del proyecto basado en `.env.example`:
 
-Frontend:
-http://localhost:5173
+```bash
+cp .env.example .env
+```
 
-Backend (API):
-http://localhost:3000/api
+Edite `.env` con valores seguros antes de ejecutar el proyecto:
 
-## Credenciales de Prueba
+```env
+DB_USER=sa
+DB_PASSWORD=your_strong_password_here
+DB_NAME=DicriDB
+JWT_SECRET=your_jwt_secret_here
+CORS_ORIGIN=http://localhost:5173
+```
 
-Tecnico: tecnico@dicri.local / 123456  
-Coordinador: coordinador@dicri.local / 123456  
-Administrador: admin@dicri.local / 123456  
+---
 
-## Estructura del Proyecto
+## Despliegue
 
-/backend  
-    /src  
-        /routes  
-        /controllers  
-        /middleware  
-        /db  
-    Dockerfile  
+### 1. Levantar los contenedores
 
-/frontend  
-    /src  
-        /pages  
-        /components  
-        /context  
-    Dockerfile  
+```bash
+docker-compose up --build
+```
 
-/db  
-    schema.sql  
-    procedures.sql  
+### 2. Inicializar la base de datos
 
-/docs  
-    DiagramaArquitectura.png  
-    DiagramaER.png
-    ManualTécnico.PDF 
+Conéctese a SQL Server con SSMS:
 
-docker-compose.yml  
-README.md  
+- **Servidor:** `localhost,1433`
+- **Autenticación:** SQL Server
+- **Usuario:** valor de `DB_USER`
+- **Contraseña:** valor de `DB_PASSWORD`
 
-## Funcionalidades
+Ejecute los scripts en orden:
 
-- Autenticación con JWT  
-- Control por roles (Técnico, Coordinador y Administrador)  
-- Registro de expedientes  
-- Registro de indicios  
-- Aprobación y rechazo de expedientes con motivo obligatorio  
-- Historial de estados por expediente  
-- Reportes por fecha y estado  
+```
+1. db/schema.sql      → crea tablas y catálogos
+2. db/procedures.sql  → crea stored procedures
+3. db/seed.sql        → inserta usuarios de prueba
+```
+
+### 3. Acceder al sistema
+
+| Servicio | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| API | http://localhost:3000/api |
+
+---
+
+## Credenciales de prueba
+
+| Rol | Correo | Contraseña |
+|---|---|---|
+| Técnico | tecnico@dicri.local | 123456 |
+| Coordinador | coordinador@dicri.local | 123456 |
+| Administrador | admin@dicri.local | 123456 |
+
+---
+
+## Roles y permisos
+
+| Acción | Técnico | Coordinador | Administrador |
+|---|:---:|:---:|:---:|
+| Registrar expediente | ✓ | | ✓ |
+| Agregar indicios | ✓ | | ✓ |
+| Consultar expedientes | ✓ | ✓ | ✓ |
+| Aprobar / rechazar | | ✓ | ✓ |
+| Ver reportes | ✓ | ✓ | ✓ |
+
+---
+
+## Estructura del proyecto
+
+```
+SistemaDicri/
+├── backend/
+│   ├── src/
+│   │   ├── config/          # dbConfig, jwtConfig
+│   │   ├── controllers/     # auth, expediente, indicio, reporte, historial
+│   │   ├── db/              # pool de conexión
+│   │   ├── middleware/       # auth JWT, manejo de errores
+│   │   ├── routes/          # definición de rutas
+│   │   └── services/        # lógica de negocio
+│   └── Dockerfile
+├── frontend/
+│   ├── src/
+│   │   ├── api/             # cliente Axios
+│   │   ├── components/      # Layout
+│   │   ├── context/         # AuthContext
+│   │   └── pages/           # LoginPage, ExpedientesList, ExpedienteDetalle, ExpedienteForm, Reportes
+│   └── Dockerfile
+├── db/
+│   ├── schema.sql           # tablas y catálogos
+│   ├── procedures.sql       # stored procedures
+│   └── seed.sql             # datos de prueba
+├── docs/
+│   ├── DiagramaArquitectura.png
+│   ├── DiagramaER.png
+│   └── ManualTécnico.pdf
+├── .env.example
+└── docker-compose.yml
+```
+
+---
 
 ## Licencia
 
-Proyecto desarrollado únicamente para fines evaluativos de una prueba técnica.
+Proyecto desarrollado para fines evaluativos.

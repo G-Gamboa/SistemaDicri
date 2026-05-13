@@ -1,8 +1,8 @@
 export const dbConfig = {
-  user: process.env.DB_USER || "sa",
-  password: process.env.DB_PASSWORD || "P@assw0rd123",
-  server: process.env.DB_SERVER || "db",
-  database: process.env.DB_NAME || "DicriDB",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_NAME,
   options: {
     encrypt: false,
     trustServerCertificate: true

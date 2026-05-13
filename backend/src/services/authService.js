@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { getConnection, sql } from "../db/connection.js";
 import jwt from "jsonwebtoken";
 import { jwtConfig } from "../config/jwtConfig.js";
@@ -10,13 +11,9 @@ export const login = async (email, password) => {
     .execute("spUsuarios_Login");
 
   const user = result.recordset[0];
-  if (!user) {
-    const error = new Error("Credenciales inválidas");
-    error.statusCode = 401;
-    throw error;
-  }
+  const valid = user && (await bcrypt.compare(password, user.password_hash));
 
-  if (password !== user.password_hash) {
+  if (!valid) {
     const error = new Error("Credenciales inválidas");
     error.statusCode = 401;
     throw error;

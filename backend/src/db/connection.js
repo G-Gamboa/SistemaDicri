@@ -9,4 +9,11 @@ export const getConnection = async () => {
   return pool;
 };
 
+export const closePool = async () => {
+  if (pool) {
+    await pool.close();
+    pool = null;
+  }
+};
+
 export { sql };

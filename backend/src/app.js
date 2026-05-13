@@ -12,14 +12,15 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/expedientes", expedienteRoutes);
 app.use("/api/indicios", indicioRoutes);
 app.use("/api/reportes", reporteRoutes);
-app.use("/api/historial", historialRoutes); 
+app.use("/api/historial", historialRoutes);
 
 app.use(errorHandler);
 

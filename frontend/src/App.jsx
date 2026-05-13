@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
 import ExpedientesList from "./pages/ExpedientesList.jsx";
 import ExpedienteForm from "./pages/ExpedienteForm.jsx";
 import ExpedienteDetalle from "./pages/ExpedienteDetalle.jsx";

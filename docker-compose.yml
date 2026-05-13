@@ -6,7 +6,7 @@ services:
     container_name: dicri-db
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=P@assw0rd123
+      - SA_PASSWORD=${DB_PASSWORD}
       - MSSQL_PID=Express
     ports:
       - "1433:1433"
@@ -17,11 +17,12 @@ services:
     build: ./backend
     container_name: dicri-api
     environment:
-      - DB_USER=sa
-      - DB_PASSWORD=P@assw0rd123
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_SERVER=db
-      - DB_NAME=DicriDB
-      - JWT_SECRET=supersecret
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
     ports:
       - "3000:3000"
     depends_on:
@@ -31,7 +32,7 @@ services:
     build: ./frontend
     container_name: dicri-web
     ports:
-      -  "5173:80"
+      - "5173:80"
     depends_on:
       - api
 

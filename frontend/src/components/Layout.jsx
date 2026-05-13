@@ -69,8 +69,7 @@ const Layout = () => {
               </span>
               <button
                 onClick={handleLogout}
-                className="btn btn-secondary"
-                style={{ marginTop: "6px", fontSize: "12px", padding: "4px 10px" }}
+                className="btn btn-secondary btn-logout"
               >
                 Cerrar sesión
               </button>

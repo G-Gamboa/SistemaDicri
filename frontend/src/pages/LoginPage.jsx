@@ -27,9 +27,7 @@ const LoginPage = () => {
   return (
     <div className="login-page">
       <div className="login-panel">
-        {}
         <div className="login-left">
-          {}
           <img src="/mp-banner.jpg" alt="Ministerio Público de Guatemala" />
           <div className="login-left-overlay" />
           <div className="login-left-content">
@@ -43,7 +41,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {}
         <div className="login-right">
           <div className="login-header">
             <div className="login-logo">
@@ -88,16 +85,6 @@ const LoginPage = () => {
             </button>
 
             {error && <div className="login-error">{error}</div>}
-
-            <div className="login-hint">
-              Para fines de prueba puede utilizar:
-              <br />
-              tecnico@dicri.local / 123456
-              <br />
-              coordinador@dicri.local / 123456
-              <br />
-              admin@dicri.local / 123456
-            </div>
           </form>
         </div>
       </div>
